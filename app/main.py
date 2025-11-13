@@ -38,9 +38,9 @@ import uvicorn
 from fastapi import FastAPI
 from app.api.router import router as api_router
 
-# PyWebIO APP
-from app.web.app import MainView
-from pywebio.platform.fastapi import asgi_app
+# PyWebIO APP - Disabled for Douyin-only version
+# from app.web.app import MainView
+# from pywebio.platform.fastapi import asgi_app
 
 # OS
 import os
@@ -62,32 +62,8 @@ Host_Port = config['API']['Host_Port']
 # API Tags
 tags_metadata = [
     {
-        "name": "Hybrid-API",
-        "description": "**(混合数据接口/Hybrid-API data endpoints)**",
-    },
-    {
         "name": "Douyin-Web-API",
         "description": "**(抖音Web数据接口/Douyin-Web-API data endpoints)**",
-    },
-    {
-        "name": "TikTok-Web-API",
-        "description": "**(TikTok-Web-API数据接口/TikTok-Web-API data endpoints)**",
-    },
-    {
-        "name": "TikTok-App-API",
-        "description": "**(TikTok-App-API数据接口/TikTok-App-API data endpoints)**",
-    },
-    {
-        "name": "Bilibili-Web-API",
-        "description": "**(Bilibili-Web-API数据接口/Bilibili-Web-API data endpoints)**",
-    },
-    {
-        "name": "iOS-Shortcut",
-        "description": "**(iOS快捷指令数据接口/iOS-Shortcut data endpoints)**",
-    },
-    {
-        "name": "Download",
-        "description": "**(下载数据接口/Download data endpoints)**",
     },
 ]
 
@@ -138,10 +114,10 @@ app = FastAPI(
 # API router
 app.include_router(api_router, prefix="/api")
 
-# PyWebIO APP
-if config['Web']['PyWebIO_Enable']:
-    webapp = asgi_app(lambda: MainView().main_view())
-    app.mount("/", webapp)
+# PyWebIO APP - Disabled for Douyin-only version
+# if config['Web']['PyWebIO_Enable']:
+#     webapp = asgi_app(lambda: MainView().main_view())
+#     app.mount("/", webapp)
 
 if __name__ == '__main__':
     uvicorn.run(app, host=Host_IP, port=Host_Port)

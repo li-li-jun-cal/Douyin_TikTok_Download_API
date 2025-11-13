@@ -107,7 +107,16 @@ class TokenManager:
         }
 
         transport = httpx.HTTPTransport(retries=5)
-        with httpx.Client(transport=transport, proxies=cls.proxies) as client:
+        # Use proxy parameter for httpx >= 0.23.0
+        # Only pass proxies if they are configured (not None)
+        client_kwargs = {"transport": transport}
+        if cls.proxies and any(cls.proxies.values()):
+            # If proxies are configured, pass them as mounts for newer httpx
+            client_kwargs["mounts"] = {
+                "http://": httpx.HTTPTransport(retries=5),
+                "https://": httpx.HTTPTransport(retries=5)
+            }
+        with httpx.Client(**client_kwargs) as client:
             try:
                 response = client.post(
                     cls.token_conf["url"], content=payload, headers=headers
