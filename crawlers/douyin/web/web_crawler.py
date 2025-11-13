@@ -45,7 +45,7 @@ from crawlers.douyin.web.endpoints import DouyinAPIEndpoints
 # 抖音接口数据请求模型
 from crawlers.douyin.web.models import (
     BaseRequestModel, LiveRoomRanking, PostComments,
-    PostCommentsReply, PostDetail,
+    PostCommentsReply, PostCommentPublish, PostDetail,
     UserProfile, UserCollection, UserLike, UserLive,
     UserLive2, UserMix, UserPost
 )
@@ -243,6 +243,19 @@ class DouyinWebCrawler:
                 DouyinAPIEndpoints.POST_COMMENT_REPLY, params.dict(), kwargs["headers"]["User-Agent"]
             )
             response = await crawler.fetch_get_json(endpoint)
+        return response
+
+    # 发布/回复评论
+    async def publish_comment(self, cookie: str, aweme_id: str, content: str, reply_comment_id: str = ""):
+        kwargs = await self.get_douyin_headers()
+        kwargs["headers"]["Cookie"] = cookie
+        base_crawler = BaseCrawler(proxies=kwargs["proxies"], crawler_headers=kwargs["headers"])
+        async with base_crawler as crawler:
+            params = PostCommentPublish(aweme_id=aweme_id, content=content, reply_comment_id=reply_comment_id)
+            endpoint = BogusManager.xb_model_2_endpoint(
+                DouyinAPIEndpoints.POST_COMMENT_PUBLISH, params.dict(), kwargs["headers"]["User-Agent"]
+            )
+            response = await crawler.fetch_post_json(endpoint)
         return response
 
     # 获取抖音热榜数据

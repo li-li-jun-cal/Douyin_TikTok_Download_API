@@ -204,6 +204,14 @@ class PostCommentsReply(BaseRequestModel):
     item_type: int = 0
 
 
+class PostCommentPublish(BaseRequestModel):
+    # POST - 发布/回复评论
+    aweme_id: str
+    content: str
+    reply_comment_id: str = ""
+    item_type: int = 0
+
+
 class PostLocate(BaseRequestModel):
     sec_user_id: str
     max_cursor: str  # last max_cursor

@@ -566,6 +566,62 @@ async def fetch_video_comments_reply(request: Request,
         raise HTTPException(status_code=status_code, detail=detail.dict())
 
 
+# 发布/回复评论
+@router.post("/publish_comment",
+             response_model=ResponseModel,
+             summary="发布/回复评论/Publish or reply to a comment")
+async def publish_comment(request: Request,
+                         cookie: str = Query(example="YOUR_COOKIE",
+                                           description="用户网页版抖音Cookie/Your web version of Douyin Cookie"),
+                         aweme_id: str = Query(example="7528449881438965044",
+                                             description="作品id/Video id"),
+                         content: str = Query(example="很棒的视频！",
+                                            description="评论内容/Comment content"),
+                         reply_comment_id: str = Query(default="",
+                                                      description="回复的评论id（可选，留空则为发布新评论）/Reply to comment id (optional, leave blank for new comment)")):
+    """
+    # [中文]
+    ### 用途:
+    - 发布评论或回复评论
+    ### 参数:
+    - cookie: 用户网页版抖音Cookie(此接口需要用户提供自己的Cookie)
+    - aweme_id: 作品id
+    - content: 评论内容
+    - reply_comment_id: 回复的评论id（可选，留空则为发布新评论）
+    ### 返回:
+    - 发布结果
+
+    # [English]
+    ### Purpose:
+    - Publish a comment or reply to a comment
+    ### Parameters:
+    - cookie: User's web version of Douyin Cookie (This interface requires users to provide their own Cookie)
+    - aweme_id: Video id
+    - content: Comment content
+    - reply_comment_id: Reply to comment id (optional, leave blank for new comment)
+    ### Return:
+    - Publish result
+
+    # [示例/Example]
+    cookie = "YOUR_COOKIE"
+    aweme_id = "7528449881438965044"
+    content = "很棒的视频！"
+    reply_comment_id = "7533615274110501689"  # 可选，回复特定评论时填写
+    """
+    try:
+        data = await DouyinWebCrawler.publish_comment(cookie, aweme_id, content, reply_comment_id)
+        return ResponseModel(code=200,
+                             router=request.url.path,
+                             data=data)
+    except Exception as e:
+        status_code = 400
+        detail = ErrorResponseModel(code=status_code,
+                                    router=request.url.path,
+                                    params=dict(request.query_params),
+                                    )
+        raise HTTPException(status_code=status_code, detail=detail.dict())
+
+
 # 生成真实msToken
 @router.get("/generate_real_msToken",
             response_model=ResponseModel,
