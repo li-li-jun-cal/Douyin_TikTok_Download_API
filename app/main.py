@@ -36,6 +36,7 @@
 # FastAPI APP
 import uvicorn
 from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
 from app.api.router import router as api_router
 
 # PyWebIO APP - Disabled for Douyin-only version
@@ -113,6 +114,12 @@ app = FastAPI(
 
 # API router
 app.include_router(api_router, prefix="/api")
+
+# Root redirect to API docs
+@app.get("/")
+async def root():
+    """Redirect root path to API documentation"""
+    return RedirectResponse(url="/docs")
 
 # PyWebIO APP - Disabled for Douyin-only version
 # if config['Web']['PyWebIO_Enable']:
