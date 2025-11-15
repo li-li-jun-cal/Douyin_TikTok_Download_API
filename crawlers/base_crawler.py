@@ -163,13 +163,16 @@ class BaseCrawler:
 
         else:
             if isinstance(response, Response):
-                logger.error(
-                    "获取数据失败。状态码: {0}".format(response.status_code)
+                error_msg = "获取数据失败。状态码: {0}, 响应内容: {1}".format(
+                    response.status_code,
+                    response.text[:500] if response.text else "无响应内容"
                 )
+                logger.error(error_msg)
+                raise APIResponseError(error_msg)
             else:
-                logger.error("无效响应类型。响应类型: {0}".format(type(response)))
-
-            raise APIResponseError("获取数据失败")
+                error_msg = "无效响应类型。响应类型: {0}".format(type(response))
+                logger.error(error_msg)
+                raise APIResponseError(error_msg)
 
     async def get_fetch_data(self, url: str):
         """
