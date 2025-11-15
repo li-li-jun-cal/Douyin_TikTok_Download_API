@@ -260,7 +260,8 @@ class BogusManager:
         if not isinstance(params, dict):
             raise TypeError("参数必须是字典类型")
 
-        param_str = "&".join([f"{k}={v}" for k, v in params.items()])
+        # URL encode parameters to handle Chinese characters and special chars
+        param_str = urlencode(params)
 
         try:
             xb_value = XB(user_agent).getXBogus(param_str)
