@@ -212,7 +212,8 @@ class BaseCrawler:
                 self.handle_http_status_error(http_error, url, attempt + 1)
 
             except APIError as e:
-                e.display_error()
+                logger.error(e.display_error())
+                raise
 
     async def post_fetch_data(self, url: str, params: dict = {}, data=None):
         """
@@ -262,7 +263,8 @@ class BaseCrawler:
                 self.handle_http_status_error(http_error, url, attempt + 1)
 
             except APIError as e:
-                e.display_error()
+                logger.error(e.display_error())
+                raise
 
     async def head_fetch_data(self, url: str):
         """
@@ -290,7 +292,8 @@ class BaseCrawler:
             self.handle_http_status_error(http_error, url, 1)
 
         except APIError as e:
-            e.display_error()
+            logger.error(e.display_error())
+            raise
 
     def handle_http_status_error(self, http_error, url: str, attempt):
         """
