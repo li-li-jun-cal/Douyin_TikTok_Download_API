@@ -202,6 +202,9 @@ class PostCommentsReply(BaseRequestModel):
     cursor: int = 0
     count: int = 20
     item_type: int = 0
+    insert_ids: str = ""
+    cut_version: int = 1
+    rcFT: str = ""
 
 
 class PostLocate(BaseRequestModel):
