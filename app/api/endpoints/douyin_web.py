@@ -619,7 +619,11 @@ async def publish_comment(request: Request,
                                     router=request.url.path,
                                     params=dict(request.query_params),
                                     )
-        raise HTTPException(status_code=status_code, detail=detail.dict())
+        # Add error message to response
+        detail_dict = detail.dict()
+        detail_dict["error"] = str(e)
+        detail_dict["error_type"] = type(e).__name__
+        raise HTTPException(status_code=status_code, detail=detail_dict)
 
 
 # 生成真实msToken
